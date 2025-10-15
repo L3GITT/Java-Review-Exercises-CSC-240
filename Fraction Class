@@ -1,0 +1,53 @@
+public class Fraction implements Comparable<Fraction> {
+
+    private final long top;
+    private final long bottom;
+
+    public Fraction(long numerator, long denominator) {
+        if (denominator == 0) {
+            throw new ArithmeticException("Denominator cannot be zero");
+        }
+      
+        if (denominator < 0) {
+            numerator = -numerator;
+            denominator = -denominator;
+        }
+
+        long gcd = gcd(Math.abs(numerator), Math.abs(denominator));
+        top = numerator / gcd;
+        bottom = denominator / gcd;
+    }
+
+    private long gcd(long a, long b) {
+        return b == 0 ? a : gcd(b, a % b);
+    }
+
+    public Fraction add(Fraction f2) {
+        long newNumerator = this.top * f2.bottom + f2.top * this.bottom;
+        long newDenominator = this.bottom * f2.bottom;
+        return new Fraction(newNumerator, newDenominator);
+    }
+
+    @Override
+    public String toString() {
+        return top + "/" + bottom;
+    }
+
+    @Override
+    public int hashCode() {
+        return 17 * Long.hashCode(top) + Long.hashCode(bottom);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Fraction)) return false;
+        Fraction f2 = (Fraction) o;
+        return this.top == f2.top && this.bottom == f2.bottom;
+    }
+
+    @Override
+    public int compareTo(Fraction f2) {
+        return Long.compare(this.top * f2.bottom, f2.top * this.bottom);
+    }
+}
